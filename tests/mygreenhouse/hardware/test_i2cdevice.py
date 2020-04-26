@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-
+from mygreenhouse.hardware.exceptions import I2CDeviceNotFound
 from mygreenhouse.hardware.i2cdevice import I2CDevice
 
 
@@ -19,6 +19,14 @@ class I2CDeviceTests(unittest.TestCase):
             d2 = I2CDevice(0x20)
         assign_and_delete()
         self.assertEqual(2, mock_smbus.return_value.close.call_count)
+
+    @patch('smbus.SMBus')
+    def test_DeviceNotFound_exception_raised_when_device_undetectable(self, mock_smbus):
+        DEVICE_ADDRESS = 0x5
+        with self.assertRaises(I2CDeviceNotFound) as expected_exception:
+            mock_smbus.return_value.write_byte.side_effect = OSError()
+            I2CDevice(DEVICE_ADDRESS)
+        self.assertEqual(DEVICE_ADDRESS, expected_exception.exception.address)
 
 
 if __name__ == '__main__':

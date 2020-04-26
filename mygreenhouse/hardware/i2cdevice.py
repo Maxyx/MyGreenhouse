@@ -1,5 +1,7 @@
 import smbus
 
+from mygreenhouse.hardware.exceptions import I2CDeviceNotFound
+
 
 class I2CDevice:
     def __init__(self, address):
@@ -11,4 +13,7 @@ class I2CDevice:
         self.smbus.close()
 
     def check_device_detectable(self):
-        self.smbus.write_byte(self.address, 0)
+        try:
+            self.smbus.write_byte(self.address, 0)
+        except OSError:
+            raise I2CDeviceNotFound(self.address)
