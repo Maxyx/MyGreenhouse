@@ -5,7 +5,8 @@ from mygreenhouse.hardware.i2cdevice import I2CDevice
 
 
 class I2CDeviceTests(unittest.TestCase):
-    def test_check_device_is_detectable_at_creation(self):
+    @staticmethod
+    def test_check_device_is_detectable_at_creation():
         mock_i2c_com_handler = MagicMock()
         device_address = 0x10
         I2CDevice(device_address, mock_i2c_com_handler)
