@@ -8,9 +8,9 @@ from mygreenhouse.hardware.i2cdevice import I2CDevice
 class I2CDeviceTests(unittest.TestCase):
     @patch('smbus.SMBus')
     def test_connection_checked_at_device_creation_when_device_exists(self, mock_smbus):
-        DEVICE_ADDRESS = 0x10
-        I2CDevice(DEVICE_ADDRESS)
-        mock_smbus.return_value.write_byte.assert_called_once_with(DEVICE_ADDRESS, 0)
+        device_address = 0x10
+        I2CDevice(device_address)
+        mock_smbus.return_value.write_byte.assert_called_once_with(device_address, 0)
 
     @patch('smbus.SMBus')
     def test_bus_closed_at_object_deletion(self, mock_smbus):
