@@ -22,11 +22,19 @@ class I2CDeviceTests(unittest.TestCase):
 
     @patch('smbus.SMBus')
     def test_DeviceNotFound_exception_raised_when_device_undetectable(self, mock_smbus):
-        DEVICE_ADDRESS = 0x5
+        device_address = 0x5
         with self.assertRaises(I2CDeviceNotFound) as expected_exception:
             mock_smbus.return_value.write_byte.side_effect = OSError()
-            I2CDevice(DEVICE_ADDRESS)
-        self.assertEqual(DEVICE_ADDRESS, expected_exception.exception.address)
+            I2CDevice(device_address)
+        self.assertEqual(device_address, expected_exception.exception.address)
+
+    @patch('smbus.SMBus')
+    def test_read_byte_from_register_called_with_correct_address(self, mock_smbus):
+        device_address = 0x2
+        d = I2CDevice(device_address)
+        register = 0x1
+        d.read_byte_from_register(register)
+        mock_smbus.return_value.read_byte_data.assert_called_once_with(device_address, register)
 
 
 if __name__ == '__main__':
