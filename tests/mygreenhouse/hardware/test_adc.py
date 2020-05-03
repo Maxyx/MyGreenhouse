@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from mygreenhouse.hardware.adc import PCF8591
+from mygreenhouse.hardware.exceptions import NoDeviceAtADCChannel
 from mygreenhouse.hardware.i2c_addresses import I2CAddresses
 
 
@@ -17,6 +18,11 @@ class PCF8591Tests(unittest.TestCase):
             with self.subTest(msg='Correct register read for channel {}'.format(i), i=i):
                 adc.analog_read_of_channel(i)
                 mock_i2c.read_byte_from_register.assert_called_with(adc.address, channels_registers[i])
+
+    def test_NoDeviceAtADCChannel_raised_when_reading_255_for_a_register(self):
+        mock_i2c = MagicMock()
+        mock_i2c.read_byte_from_register.return_value = 255
+        self.assertRaises(NoDeviceAtADCChannel, PCF8591(mock_i2c).analog_read_of_channel, 0)
 
 
 if __name__ == '__main__':
