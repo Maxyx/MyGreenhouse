@@ -1,6 +1,6 @@
 import logging
 
-import smbus
+import smbus2
 
 from mygreenhouse.hardware.exceptions import I2CDeviceNotFound
 
@@ -18,10 +18,10 @@ class I2CCommunicationHandler:
 
     @staticmethod
     def write_byte(i2c_address, byte_to_send):
-        with smbus.SMBus(1) as bus:
+        with smbus2.SMBus(1) as bus:
             bus.write_byte(i2c_address, byte_to_send)
 
     @classmethod
     def read_byte_from_register(cls, i2c_address, register):
-        with smbus.SMBus(1) as bus:
+        with smbus2.SMBus(1) as bus:
             return bus.read_byte_data(i2c_address, register)

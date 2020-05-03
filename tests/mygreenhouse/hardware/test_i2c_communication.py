@@ -6,13 +6,13 @@ from mygreenhouse.hardware.i2c_communication import I2CCommunicationHandler
 
 
 class I2CCommunicationHandlerTests(unittest.TestCase):
-    @patch('smbus.SMBus')
+    @patch('smbus2.SMBus')
     def test_device_detected_when_device_detectable(self, mock_smbus):
         device_address = 0x10
         self.assertTrue(I2CCommunicationHandler.check_device_detectable(device_address))
         mock_smbus.return_value.__enter__.return_value.write_byte.assert_called_once_with(device_address, 0)
 
-    @patch('smbus.SMBus')
+    @patch('smbus2.SMBus')
     def test_DeviceNotFound_exception_raised_when_device_undetectable(self, mock_smbus):
         device_address = 0x5
         with self.assertRaises(I2CDeviceNotFound) as expected_exception:
@@ -20,7 +20,7 @@ class I2CCommunicationHandlerTests(unittest.TestCase):
             I2CCommunicationHandler().check_device_detectable(device_address)
         self.assertEqual(device_address, expected_exception.exception.address)
 
-    @patch('smbus.SMBus')
+    @patch('smbus2.SMBus')
     def test_read_byte_from_register_calls_smbus_read_byte_data_with_correct_addresses(self, mock_smbus):
         device_address = 0x2
         register = 0x1
